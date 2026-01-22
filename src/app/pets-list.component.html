@@ -1,0 +1,71 @@
+<div class="pets-container">
+  <header class="pets-header">
+    <h1>Listagem de Pets</h1>
+    <p class="subtitle">Visualize e gerencie os pets disponíveis para adoção</p>
+  </header>
+
+  <div class="search-container">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Pesquisar pet por nome ou raça..."
+      [value]="searchTerm()"
+      (input)="onSearchChange($event)"
+    />
+    <span class="search-icon">🔍</span>
+  </div>
+
+  <div class="sort-controls">
+    <button
+      class="sort-button"
+      [class.active]="sortBy() === 'name'"
+      (click)="sortByName()"
+    >
+      Nome {{ getSortIcon('name') }}
+    </button>
+    <button
+      class="sort-button"
+      [class.active]="sortBy() === 'breed'"
+      (click)="sortByBreed()"
+    >
+      Raça {{ getSortIcon('breed') }}
+    </button>
+    <button
+      class="sort-button"
+      [class.active]="sortBy() === 'age'"
+      (click)="sortByAge()"
+    >
+      Idade {{ getSortIcon('age') }}
+    </button>
+  </div>
+
+  <div class="pets-grid">
+    @for (pet of pets(); track pet.id) {
+      <div class="pet-card">
+        <img
+          [src]="pet.photo"
+          [alt]="'Foto de ' + pet.name"
+          class="pet-photo"
+        />
+        <div class="pet-info">
+          <h3 class="pet-name">{{ pet.name }}</h3>
+          <div class="pet-details">
+            <span class="detail-item"><strong>Raça:</strong> {{ pet.breed }}</span>
+            <span class="detail-item"><strong>Cor:</strong> {{ pet.color }}</span>
+            <span class="detail-item"><strong>Tamanho:</strong> {{ pet.size }}</span>
+            <span class="detail-item"><strong>Idade:</strong> {{ pet.age }} {{ pet.age === 1 ? 'ano' : 'anos' }}</span>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div class="no-results">
+        <p>Nenhum pet encontrado</p>
+        <small>Tente ajustar sua pesquisa</small>
+      </div>
+    }
+  </div>
+
+  <div class="pets-count">
+    <p>Total de pets: <strong>{{ pets().length }}</strong></p>
+  </div>
+</div>
