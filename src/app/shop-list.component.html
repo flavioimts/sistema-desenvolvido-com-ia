@@ -1,0 +1,152 @@
+<div class="shop-container">
+  <header class="shop-header">
+    <h1>Loja de Camisas Personalizadas</h1>
+    <p class="shop-subtitle">Encontre a camisa perfeita para você</p>
+  </header>
+
+  <div class="controls-section">
+    <!-- Barra de busca -->
+    <div class="search-bar">
+      <input
+        type="text"
+        [value]="searchTerm()"
+        (input)="onSearchChange($event)"
+        placeholder="Buscar camisas..."
+        class="search-input"
+      />
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-row">
+      <div class="filter-group">
+        <label for="size-filter">Tamanho:</label>
+        <select
+          id="size-filter"
+          [value]="selectedSize()"
+          (change)="onSizeChange($event)"
+          class="filter-select"
+        >
+          <option value="all">Todos</option>
+          @for (size of availableSizes(); track size) {
+            <option [value]="size">{{ size }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="color-filter">Cor:</label>
+        <select
+          id="color-filter"
+          [value]="selectedColor()"
+          (change)="onColorChange($event)"
+          class="filter-select"
+        >
+          <option value="all">Todas</option>
+          @for (color of availableColors(); track color) {
+            <option [value]="color">{{ color }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="price-filter">Preço:</label>
+        <select
+          id="price-filter"
+          [value]="selectedPriceRange()"
+          (change)="onPriceRangeChange($event)"
+          class="filter-select"
+        >
+          <option value="all">Todos</option>
+          <option value="low">Até R$ 60</option>
+          <option value="medium">R$ 60 - R$ 100</option>
+          <option value="high">Acima de R$ 100</option>
+        </select>
+      </div>
+
+      <button (click)="clearFilters()" class="clear-button">
+        Limpar Filtros
+      </button>
+    </div>
+
+    <!-- Ordenação -->
+    <div class="sort-row">
+      <span class="sort-label">Ordenar por:</span>
+      <button
+        (click)="onSortChange('name')"
+        [class.active]="sortBy() === 'name'"
+        class="sort-button"
+      >
+        Nome {{ getSortIcon('name') }}
+      </button>
+      <button
+        (click)="onSortChange('price')"
+        [class.active]="sortBy() === 'price'"
+        class="sort-button"
+      >
+        Preço {{ getSortIcon('price') }}
+      </button>
+      <button
+        (click)="onSortChange('popularity')"
+        [class.active]="sortBy() === 'popularity'"
+        class="sort-button"
+      >
+        Popularidade {{ getSortIcon('popularity') }}
+      </button>
+    </div>
+
+    <!-- Contador de resultados -->
+    <div class="results-count">
+      {{ filteredAndSortedProducts().length }} produto(s) encontrado(s)
+    </div>
+  </div>
+
+  <!-- Grid de produtos -->
+  <div class="products-grid">
+    @for (product of filteredAndSortedProducts(); track product.id) {
+      <div class="product-card">
+        <div class="product-image">
+          <img [src]="product.image" [alt]="product.name" />
+          <div class="popularity-badge">
+            ⭐ {{ product.popularity }}%
+          </div>
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">{{ product.name }}</h3>
+          <p class="product-description">{{ product.description }}</p>
+
+          <div class="product-details">
+            <div class="detail-item">
+              <strong>Tamanhos:</strong>
+              <div class="sizes-list">
+                @for (size of product.sizes; track size) {
+                  <span class="size-badge">{{ size }}</span>
+                }
+              </div>
+            </div>
+
+            <div class="detail-item">
+              <strong>Cores:</strong>
+              <div class="colors-list">
+                @for (color of product.colors; track color) {
+                  <span class="color-badge">{{ color }}</span>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="product-footer">
+            <span class="product-price">R$ {{ product.price.toFixed(2) }}</span>
+            <button class="buy-button">Ver Detalhes</button>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div class="no-results">
+        <p>Nenhum produto encontrado com os filtros selecionados.</p>
+        <button (click)="clearFilters()" class="clear-button">
+          Limpar Filtros
+        </button>
+      </div>
+    }
+  </div>
+</div>
