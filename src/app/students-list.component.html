@@ -1,0 +1,59 @@
+<div class="students-container">
+  <header class="students-header">
+    <h1>Listagem de Alunos</h1>
+    <p class="subtitle">Visualize e gerencie os alunos cadastrados no sistema</p>
+  </header>
+
+  <div class="search-container">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Pesquisar aluno por nome..."
+      [value]="searchTerm()"
+      (input)="onSearchChange($event)"
+    />
+    <span class="search-icon">🔍</span>
+  </div>
+
+  <div class="sort-controls">
+    <button
+      class="sort-button"
+      [class.active]="sortBy() === 'name'"
+      (click)="sortByName()"
+    >
+      Nome {{ getSortIcon('name') }}
+    </button>
+    <button
+      class="sort-button"
+      [class.active]="sortBy() === 'age'"
+      (click)="sortByAge()"
+    >
+      Idade {{ getSortIcon('age') }}
+    </button>
+  </div>
+
+  <div class="students-grid">
+    @for (student of students(); track student.id) {
+      <div class="student-card">
+        <img
+          [src]="student.photo"
+          [alt]="'Foto de ' + student.name"
+          class="student-photo"
+        />
+        <div class="student-info">
+          <h3 class="student-name">{{ student.name }}</h3>
+          <p class="student-age">{{ student.age }} anos</p>
+        </div>
+      </div>
+    } @empty {
+      <div class="no-results">
+        <p>Nenhum aluno encontrado</p>
+        <small>Tente ajustar sua pesquisa</small>
+      </div>
+    }
+  </div>
+
+  <div class="students-count">
+    <p>Total de alunos: <strong>{{ students().length }}</strong></p>
+  </div>
+</div>
